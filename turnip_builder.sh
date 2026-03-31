@@ -70,6 +70,15 @@ EOF
     
     export CFLAGS="-D__ANDROID__ -Wno-error -Wno-deprecated-declarations"
     export CXXFLAGS="-D__ANDROID__ -Wno-error -Wno-deprecated-declarations"
+    export PKG_CONFIG_PATH="$workdir/pkgconfig"
+    mkdir -p "$PKG_CONFIG_PATH"
+    cat <<EOF > "$PKG_CONFIG_PATH/libdrm.pc"
+Name: libdrm
+Description: Fake libdrm for KGSL build
+Version: 2.4.115
+Libs:
+Cflags:
+EOF
 
     meson setup "$build_dir" --cross-file android-cross.txt \
         -Dbuildtype=release \
@@ -87,8 +96,10 @@ EOF
         -Dwerror=false \
 		-Dgles1=enabled \
         -Dgles2=enabled \
-		-Dgallium-vdpau=disabled \
-		-Dintel-rt=disabled \
+		-Dopengl=false \
+        -Dgbm=disabled \
+        -Dintel-rt=disabled \
+        -Dvideo-codecs=none \
         -Dvdpau=disabled \
         -Dva=disabled \
         -Dxa=disabled \
