@@ -1,7 +1,7 @@
 #!/bin/bash -e
 set -o pipefail
 
-deps="pkg-config libdrm2 libdrm-intel1 libdrm-amdgpu1 libdrm-nouveau2 ninja patchelf unzip curl pip flex bison zip git perl glslangValidator python3"
+deps="pkg-config libdrm-dev ninja patchelf unzip curl pip flex bison zip git perl glslangValidator python3"
 workdir="$(pwd)/turnip_workdir"
 ndkver="android-ndk-r28"
 target_sdk="35"
