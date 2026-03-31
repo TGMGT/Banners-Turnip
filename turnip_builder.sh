@@ -88,8 +88,10 @@ EOF
 		-Dgles1=enabled \
         -Dgles2=enabled \
 		-Dgallium-vdpau=disabled \
-        -Dgallium-va=disabled \
-        -Dgallium-xa=disabled \
+		-Dintel-rt=disabled \
+        -Dvdpau=disabled \
+        -Dva=disabled \
+        -Dxa=disabled \
         -Dzstd=disabled \
         -Dwerror=false \
         --force-fallback-for=spirv-tools,spirv-headers
