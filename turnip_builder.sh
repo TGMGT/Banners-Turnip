@@ -87,6 +87,7 @@ EOF
         -Dwerror=false \
 		-Dgles1=enabled \
         -Dgles2=enabled \
+		-Dlibdrm=disabled \
         --force-fallback-for=spirv-tools,spirv-headers
     
     ninja -C "$build_dir"
