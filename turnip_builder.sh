@@ -99,7 +99,7 @@ EOF
 		-Dopengl=false \
         -Dgbm=disabled \
         -Dintel-rt=disabled \
-        -Dvideo-codecs=none \
+        -Dvideo-codecs= \
         -Dvdpau=disabled \
         -Dva=disabled \
         -Dxa=disabled \
