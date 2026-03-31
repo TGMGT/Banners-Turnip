@@ -87,7 +87,11 @@ EOF
         -Dwerror=false \
 		-Dgles1=enabled \
         -Dgles2=enabled \
-		-Dintel-rt=disabled \
+		-Dgallium-vdpau=disabled \
+        -Dgallium-va=disabled \
+        -Dgallium-xa=disabled \
+        -Dzstd=disabled \
+        -Dwerror=false \
         --force-fallback-for=spirv-tools,spirv-headers
     
     ninja -C "$build_dir"
