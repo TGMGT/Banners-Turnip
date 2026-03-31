@@ -100,9 +100,6 @@ EOF
         -Dgbm=disabled \
         -Dintel-rt=disabled \
         -Dvideo-codecs= \
-        -Dvdpau=disabled \
-        -Dva=disabled \
-        -Dxa=disabled \
         -Dzstd=disabled \
         -Dwerror=false \
         --force-fallback-for=spirv-tools,spirv-headers
