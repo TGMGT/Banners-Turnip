@@ -76,15 +76,17 @@ EOF
         -Dplatforms=android \
         -Dplatform-sdk-version=35 \
         -Dandroid-stub=true \
-        -Dgallium-drivers= \
+        -Dgallium-drivers=freedreno \
         -Dvulkan-drivers=freedreno \
         -Dfreedreno-kmds=kgsl \
-        -Degl=disabled \
+        -Degl=enabled \
         -Dglx=disabled \
         -Dvulkan-beta=true \
         -Ddefault_library=shared \
         -Dzstd=disabled \
         -Dwerror=false \
+		-Dgles1=enabled \
+        -Dgles2=enabled \
         --force-fallback-for=spirv-tools,spirv-headers
     
     ninja -C "$build_dir"
