@@ -131,8 +131,8 @@ EOF
     echo "{
   \"schemaVersion\": 1,
   \"name\": \"$build_name\",
-  \"description\": \"System-Ready Mesa Main (SDK 29) + GLES\",
-  \"author\": \"StevenMX\",
+  \"description\": \"System-Ready Mesa Main (SDK 31) + GLES\",
+  \"author\": \"StevenMX_TouseefX_nihui\",
   \"packageVersion\": \"1\",
   \"vendor\": \"Mesa\",
   \"driverVersion\": \"$output_tag\",
