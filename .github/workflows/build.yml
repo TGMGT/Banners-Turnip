@@ -17,7 +17,7 @@ jobs:
       - name: Install Dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y ninja-build patchelf unzip flex bison git perl python3-pip glslang-tools
+          sudo apt-get install -y pkg-config libdrm-dev libdrm-amdgpu1 libdrm-radeon1 libdrm-intel1 libdrm-nouveau2 ninja-build patchelf unzip flex bison git perl python3-pip glslang-tools
           pip3 install --break-system-packages meson mako
 
       - name: Build
