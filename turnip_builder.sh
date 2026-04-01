@@ -36,8 +36,8 @@ compile_mesa() {
     git clone --depth 100 -b "$branch" "$repo_url" mesa
     cd mesa
 
-	patch -p1 -i ../mesa-implement-android_stub.patch
-    patch -p1 --forward --batch -i ../mesa-android-include-all-vulkan-extension.patch
+	patch -p1 -i ../patches/mesa-implement-android_stub.patch
+    patch -p1 --forward --batch -i ../patches/mesa-android-include-all-vulkan-extension.patch
 
     mkdir -p subprojects && cd subprojects
     rm -rf spirv-tools spirv-headers libdrm
