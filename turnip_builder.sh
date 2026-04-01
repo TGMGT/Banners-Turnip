@@ -20,6 +20,7 @@ prepare_ndk(){
 	if [ ! -d "$ndkver" ]; then
 		curl -L "https://dl.google.com/android/repository/${ndkver}-linux.zip" --output "${ndkver}-linux.zip" &> /dev/null
 		unzip -q "${ndkver}-linux.zip" &> /dev/null
+		rm -rf "${ndkver}-linux.zip"
 	fi
     export ANDROID_NDK_HOME="$workdir/$ndkver"
 }
@@ -106,16 +107,17 @@ EOF
 	
     local vlk_lib="$build_dir/src/freedreno/vulkan/libvulkan_freedreno.so"
     local egl_lib="$build_dir/src/egl/libEGL.so"
-    local gles1_lib="$build_dir/src/glesv1/libGLESv1_CM.so"
-    local gles2_lib="$build_dir/src/glesv2/libGLESv2.so"
+    local gles1_lib="$build_dir/src/mesa/glapi/es1api/libGLESv1_CM.so"
+    local gles2_lib="$build_dir/src/mesa/glapi/es2api/libGLESv2.so"
 
     if [ ! -f "$vlk_lib" ]; then echo "Build Failed: Vulkan missing"; exit 1; fi
     
     local pkg_dir="$workdir/pkg_$output_tag"
     mkdir -p "$pkg_dir"
-	
-    cp "$vlk_lib"  "$pkg_dir/vulkan.adreno.so"
-    cp "$egl_lib"  "$pkg_dir/libEGL.so"
+    
+    # Copy with correct names for system hooking
+    cp "$vlk_lib"   "$pkg_dir/vulkan.adreno.so"
+    cp "$egl_lib"   "$pkg_dir/libEGL.so"
     cp "$gles1_lib" "$pkg_dir/libGLESv1_CM.so"
     cp "$gles2_lib" "$pkg_dir/libGLESv2.so"
 
