@@ -101,30 +101,46 @@ EOF
         --force-fallback-for=spirv-tools,spirv-headers,libdrm
     
     ninja -C "$build_dir"
+	
+    local vlk_lib="$build_dir/src/freedreno/vulkan/libvulkan_freedreno.so"
+    local egl_lib="$build_dir/src/egl/libEGL.so"
+    local gles1_lib="$build_dir/src/glesv1/libGLESv1_CM.so"
+    local gles2_lib="$build_dir/src/glesv2/libGLESv2.so"
 
-    local lib="$build_dir/src/freedreno/vulkan/libvulkan_freedreno.so"
-    if [ ! -f "$lib" ]; then echo "Build Failed"; exit 1; fi
+    if [ ! -f "$vlk_lib" ]; then echo "Build Failed: Vulkan missing"; exit 1; fi
     
     local pkg_dir="$workdir/pkg_$output_tag"
     mkdir -p "$pkg_dir"
-    cp "$lib" "$pkg_dir/vulkan.ad07XX.so"
+	
+    cp "$vlk_lib"  "$pkg_dir/vulkan.adreno.so"
+    cp "$egl_lib"  "$pkg_dir/libEGL.so"
+    cp "$gles1_lib" "$pkg_dir/libGLESv1_CM.so"
+    cp "$gles2_lib" "$pkg_dir/libGLESv2.so"
+
     cd "$pkg_dir"
-    patchelf --set-soname "vulkan.adreno.so" vulkan.ad07XX.so
     
+    patchelf --set-soname "vulkan.adreno.so" vulkan.adreno.so
+    patchelf --set-soname "libEGL.so" libEGL.so
+    patchelf --set-soname "libGLESv1_CM.so" libGLESv1_CM.so
+    patchelf --set-soname "libGLESv2.so" libGLESv2.so
+	
     echo "{
   \"schemaVersion\": 1,
   \"name\": \"$build_name\",
-  \"description\": \"Mesa Main Clean Build (SDK 29)\",
+  \"description\": \"System-Ready Mesa Main (SDK 29) + GLES\",
   \"author\": \"StevenMX\",
   \"packageVersion\": \"1\",
   \"vendor\": \"Mesa\",
   \"driverVersion\": \"$output_tag\",
   \"minApi\": 28,
-  \"libraryName\": \"vulkan.ad07XX.so\"
+  \"libraryName\": \"vulkan.adreno.so\",
+  \"eglLibraryName\": \"libEGL.so\",
+  \"glesv1LibraryName\": \"libGLESv1_CM.so\",
+  \"glesv2LibraryName\": \"libGLESv2.so\"
 }" > meta.json
     
-    zip -9 "$workdir/Turnip-${output_tag}.zip" vulkan.ad07XX.so meta.json
-    echo "Done: Turnip-${output_tag}.zip"
+    zip -9 "$workdir/Turnip-System-${output_tag}.zip" *.so meta.json
+    echo "Done: Turnip-System-${output_tag}.zip"
 }
 
 check_deps
