@@ -28,8 +28,8 @@ prepare_ndk(){
 compile_mesa() {
     local repo_url="https://gitlab.freedesktop.org/mesa/mesa.git"
     local branch="main"
-    local build_name="Turnip-Main-Clean-SDK29"
-    local output_tag="V97-Main-SDK29"
+    local build_name="Turnip-Main-Clean-SDK31"
+    local output_tag="V97-Main-SDK31"
 
     echo "Cloning Mesa Main..."
     
