@@ -4,7 +4,9 @@ set -o pipefail
 deps="pkg-config ninja patchelf unzip curl pip flex bison zip git perl glslangValidator python3"
 workdir="$(pwd)/turnip_workdir"
 ndkver="android-ndk-r28"
-target_sdk="29"
+target_sdk="31"
+script_dir="$(pwd)"
+patch_dir="$script_dir/patches"
 
 check_deps(){
 	for dep in $deps; do
@@ -36,8 +38,8 @@ compile_mesa() {
     git clone --depth 100 -b "$branch" "$repo_url" mesa
     cd mesa
 
-	patch -p1 -i ../patches/mesa-implement-android_stub.patch
-    patch -p1 --forward --batch -i ../patches/mesa-android-include-all-vulkan-extension.patch
+	patch -p1 -i "$patch_dir/mesa-implement-android_stub.patch"
+    patch -p1 --forward --batch -i "$patch_dir/mesa-android-include-all-vulkan-extension.patch"
 
     mkdir -p subprojects && cd subprojects
     rm -rf spirv-tools spirv-headers libdrm
@@ -51,7 +53,7 @@ compile_mesa() {
 
     local ndk_bin="$ANDROID_NDK_HOME/toolchains/llvm/prebuilt/linux-x86_64/bin"
     local ndk_sys="$ANDROID_NDK_HOME/toolchains/llvm/prebuilt/linux-x86_64/sysroot"
-    local cver="29"
+    local cver="31"
     [ ! -f "$ndk_bin/aarch64-linux-android${cver}-clang" ] && cver="34"
 
     cat <<EOF > android-cross.txt
@@ -78,7 +80,7 @@ EOF
     meson setup "$build_dir" --cross-file android-cross.txt \
         -Dbuildtype=release \
         -Dplatforms=android \
-        -Dplatform-sdk-version=29 \
+        -Dplatform-sdk-version=31 \
         -Dandroid-stub=true \
         -Dgallium-drivers=freedreno \
         -Dvulkan-drivers=freedreno \
