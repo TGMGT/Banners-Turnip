@@ -4,7 +4,7 @@ set -o pipefail
 deps="pkg-config ninja patchelf unzip curl pip flex bison zip git perl glslangValidator python3"
 workdir="$(pwd)/turnip_workdir"
 ndkver="android-ndk-r28"
-target_sdk="35"
+target_sdk="29"
 
 check_deps(){
 	for dep in $deps; do
@@ -25,8 +25,8 @@ prepare_ndk(){
 compile_mesa() {
     local repo_url="https://gitlab.freedesktop.org/mesa/mesa.git"
     local branch="main"
-    local build_name="Turnip-Main-Clean-SDK35"
-    local output_tag="V97-Main-SDK35"
+    local build_name="Turnip-Main-Clean-SDK29"
+    local output_tag="V97-Main-SDK29"
 
     echo "Cloning Mesa Main..."
     
@@ -37,9 +37,10 @@ compile_mesa() {
     cd mesa
 
     mkdir -p subprojects && cd subprojects
-    rm -rf spirv-tools spirv-headers
+    rm -rf spirv-tools spirv-headers libdrm
     git clone --depth=1 https://github.com/KhronosGroup/SPIRV-Tools.git spirv-tools
     git clone --depth=1 https://github.com/KhronosGroup/SPIRV-Headers.git spirv-headers
+	git clone --depth=1 https://gitlab.freedesktop.org/mesa/drm.git libdrm
     cd ..
 
     local build_dir="$workdir/mesa/build"
@@ -47,7 +48,7 @@ compile_mesa() {
 
     local ndk_bin="$ANDROID_NDK_HOME/toolchains/llvm/prebuilt/linux-x86_64/bin"
     local ndk_sys="$ANDROID_NDK_HOME/toolchains/llvm/prebuilt/linux-x86_64/sysroot"
-    local cver="35"
+    local cver="29"
     [ ! -f "$ndk_bin/aarch64-linux-android${cver}-clang" ] && cver="34"
 
     cat <<EOF > android-cross.txt
@@ -70,20 +71,11 @@ EOF
     
     export CFLAGS="-D__ANDROID__ -Wno-error -Wno-deprecated-declarations"
     export CXXFLAGS="-D__ANDROID__ -Wno-error -Wno-deprecated-declarations"
-    export PKG_CONFIG_PATH="$workdir/pkgconfig"
-    mkdir -p "$PKG_CONFIG_PATH"
-    cat <<EOF > "$PKG_CONFIG_PATH/libdrm.pc"
-Name: libdrm
-Description: Fake libdrm for KGSL build
-Version: 2.4.115
-Libs:
-Cflags:
-EOF
 
     meson setup "$build_dir" --cross-file android-cross.txt \
         -Dbuildtype=release \
         -Dplatforms=android \
-        -Dplatform-sdk-version=35 \
+        -Dplatform-sdk-version=29 \
         -Dandroid-stub=true \
         -Dgallium-drivers=freedreno \
         -Dvulkan-drivers=freedreno \
@@ -102,7 +94,8 @@ EOF
         -Dvideo-codecs= \
         -Dzstd=disabled \
         -Dwerror=false \
-        --force-fallback-for=spirv-tools,spirv-headers
+		-Dallow-fallback-for=libdrm \
+        --force-fallback-for=spirv-tools,spirv-headers,libdrm
     
     ninja -C "$build_dir"
 
@@ -118,7 +111,7 @@ EOF
     echo "{
   \"schemaVersion\": 1,
   \"name\": \"$build_name\",
-  \"description\": \"Mesa Main Clean Build (SDK 35)\",
+  \"description\": \"Mesa Main Clean Build (SDK 29)\",
   \"author\": \"StevenMX\",
   \"packageVersion\": \"1\",
   \"vendor\": \"Mesa\",
